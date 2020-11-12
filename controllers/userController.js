@@ -26,7 +26,6 @@ userController.prototype.UserCreation = async function (req, res) {
 
         } else {
             let createuser = await userModel.createuser(req.body);
-            console.log("createuser>>>>>>>>>>>>>>>>>>",createuser)
             if (createuser.insertId) {
                 var token = jwt.sign({email: req.body.email,userId : createuser.insertId}, config.secret);
 
