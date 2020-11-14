@@ -13,8 +13,13 @@ function catController() {
 
 //create all cats(cat,subcat,chapters,classes)
 catController.prototype.createcat = async function (req, res) {
+    
     if(req.body.type == 1){
-        if (!req.body.Name) {
+        if (!req.body.level && req.body.level !=0) {
+            res.status(400).json({ status: 400, "message": "level is required" });
+        } else if (!req.body.parentId && req.body.parentId != 0) {
+            res.status(400).json({ status: 400, "message": "parentId is required" });
+        }else if (!req.body.Name) {
             res.status(400).json({ status: 400, "message": "Name is required" });
         }
         else {
@@ -109,14 +114,20 @@ catController.prototype.createcat = async function (req, res) {
 
 
 //create all cats(cat,subcat,chapters,classes)
-catController.prototype.getallcat = async function (req, res) {
-    catModel.getallcat(req, function (data) {
-        if (data) {
-            res.status(200).json({ status: 200, "message": "Success", 'categories': data });
-        } else {
-            res.status(200).json({ status: 200, message: "No records Found" });
-        }
-    });
+catController.prototype.getcat = async function (req, res) {
+    if (!req.body.level && req.body.level !=0) {
+        res.status(400).json({ status: 400, "message": "level is required" });
+    
+    }else{
+        catModel.getcat(req, function (data) {
+            if (data) {
+                res.status(200).json({ status: 200, "message": "Success", 'categories': data });
+            } else {
+                res.status(200).json({ status: 200, message: "No records Found" });
+            }
+        });
+    }
+    
 }
 
 

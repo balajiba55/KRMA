@@ -85,13 +85,34 @@ exports.userbyemail = async function (data) {
 exports.userlogin = async function (data) {
     try {
         return await new Promise((resolve, reject) => {
-            dbMySQL.query('SELECT * FROM krms_users where email = ? OR mobileNo = ?', [data.email,data.mobileNo], (error, results, fields) => {
+            dbMySQL.query('SELECT * FROM krms_users where email = ? OR mobileNo = ? AND status = ?', [data.email,data.mobileNo,1], (error, results, fields) => {
                 
                 if (error) return reject(error)
                 if (results && results.length) {
                    var passwordstatus =  bcrypt.compareSync(data.password,results[0].password);
                    var obj = {passwordstatus : passwordstatus ,results : results}
                   
+                   return resolve(obj);
+
+                } else {
+                    return resolve({});
+
+                }
+
+            });
+        });
+
+    } catch (err) {
+    }
+};
+
+//update user status
+exports.updateuserstatus = async function (data) {
+    try {
+        return await new Promise((resolve, reject) => {
+            dbMySQL.query('UPDATE krms_users SET  status = ? WHERE userId = ?',[data.status,data.userId], (error, results, fields) => {
+                if (error) return reject(error)
+                if (results && results.length) {
                    return resolve(obj);
 
                 } else {

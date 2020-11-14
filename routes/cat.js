@@ -9,7 +9,7 @@ cc=new  catcontroller()
 
 
 router.post('/createcat',utils.tokenauthentication,cc.createcat)         //create cat
-router.post('/getallcat',utils.tokenauthentication,cc.getallcat)         //get all cat
+router.post('/getcat',utils.tokenauthentication,cc.getcat)         //get all cat
 
 
 

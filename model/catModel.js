@@ -49,37 +49,36 @@ exports.createchapter = async function (data) {
 };
 
 
-exports.getallcat = function (req, callback) {
+exports.getcat = function (req, callback) {
+    if (req.body.type == 1) {
+        dbMySQL.query("SELECT * from categorys Where type = ? AND level = ?", [req.body.type, req.body.level], function (err, rows, fields) {
+           console.log("rows>>>>>>>>>>>>>>>>>>>",rows)
+            if (rows && rows.length) {
 
-    dbMySQL.query("SELECT * from categorys Where type = ?", [1], function (err, rows, fields) {
-        console.log("rows>>>>>>>>>>>", rows)
-        var object = {}, result = [];
-        if (rows && rows.length) {
-            rows.map((item, index) => {
-                object = {}
-                dbMySQL.query('SELECT * from categorys WHERE catId = ? AND type = ?', [item.Id, 2], function (suberr, subrows) {
-                    object = item;
-                    object.subcategory = subrows;
-                    if (subrows && subrows.length) {
-                        subrows.map((subitem, subindex) => {
+                callback(rows);
 
-                            dbMySQL.query('SELECT * from categorys WHERE catId = ? AND subcatId = ? AND type = ?', [item.Id, subitem.Id, 3], function (chaptererr, chapterrows) {
-                                object.subcategory.chapter = chapterrows;
+            } else {
+                callback([]);
 
-                            })
+            }
+
+        });
+    } else {
+        dbMySQL.query("SELECT * from categorys Where type = ? AND parentId = ?", [req.body.type, req.body.parentId], function (err, rows, fields) {
+            if (rows && rows.length) {
+
+                callback(rows);
 
 
-                        })
-                    } else {
-                        result.push(object);
-                    }
-                    if (result.length === rows.length) {
-                        callback(result);
-                    }
-                });
 
-            })
-        }
 
-    });
+            } else {
+                callback([]);
+
+
+            }
+
+        });
+    }
+
 }

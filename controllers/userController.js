@@ -89,6 +89,26 @@ userController.prototype.userlogin = async function (req, res) {
 }
 
 
+//user login
+userController.prototype.updateuserstatus = async function (req, res) {
+    if (req.body.status != 0 && req.body.status != 1) {
+        res.status(400).json({ status: 400, "message": "status is required" });
+    } else if (!req.body.userId) {
+        res.status(400).json({ status: 400, "message": "userId is required" });
+
+    } else {
+        let updateuserstatus = await userModel.updateuserstatus(req.body);   
+        if (updateuserstatus) {
+            res.status(200).json({ status: 200, "message": "Updated Successfully"});
+
+        } else {
+            res.status(400).json({ status: 400, "message": "something went wrong"});
+
+        }
+
+    }
+}
+
 
 //user login
 userController.prototype.sample = async function (req, res) {
